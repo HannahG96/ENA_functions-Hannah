@@ -1,7 +1,8 @@
 #NOTE: steady-state of system is not checked
+
 #########################################################################################################
 
-test.function<-function(Z_cs,T_cs,E_cs,R_cs, select="Default"){
+test.function<-function(Z_cs,T_cs,E_cs,R_cs, select="Default", nmax=10000){
   
   ###Multiple weak arc selection: select weak arc going out from most connected nod OR weak arc that is heavier weighted
   if(select=="weighted"){select<-"weighted"}
@@ -78,6 +79,8 @@ test.function<-function(Z_cs,T_cs,E_cs,R_cs, select="Default"){
   
   for(u in 1:length(nod_DFS)){
     
+    if(length(Weak) >= nmax) break #LIMIT COMPUTING TIME: set a maximal number of cycles to be detected
+    
     #1)visit nod following the list order
     mynod<-nod_DFS[min(which(color=="WHITE"))]
     path<-rep(NA, length(which(color=="WHITE")))#start a new DFS search pathway to detect all (remaining) cycles that include mynod
@@ -118,6 +121,9 @@ test.function<-function(Z_cs,T_cs,E_cs,R_cs, select="Default"){
     backedges <-rep(NA, length(nod_DFS[which(color=="WHITE")])) #empty vector to store all detected backedges to mynod-->helps to detect only once each cycle
     
     repeat{
+      
+      if(length(Weak) >= nmax) break #LIMIT COMPUTING TIME: set a maximal number of cycles to be detected
+      
       path[min(which(is.na(path)==TRUE))] <- visit  #add the currently visited nod to the current pathway
       DFS_path.rm[which(nod_DFS==visit)] <- 1 #mark this nod as part of the current pathway to not add it >1 in current pathway
       
