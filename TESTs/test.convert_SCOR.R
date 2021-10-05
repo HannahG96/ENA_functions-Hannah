@@ -1,15 +1,13 @@
+setwd("C:/Hannah/Biological Oceanography/HiWi Scotti/ENA PACKAGE/TESTs")
 ######
 ###Test SCOR conversion#######
 ######
-#setwd("C:/Hannah/Biological Oceanography/HiWi Scotti/SCOR format")
-
-source("convertSCOR.inclErr.R")
 
 #Test function on simple network:
-ConeSpring<-SCOR.convert("Examples/SCOR_exampleNetwork.txt")
+ConeSpring<-SCOR.convert("Network data/SCOR_exampleNetwork.txt")
 
 #Test function on a file with ERRORS:
-cypwet_ERRORS<-SCOR.convert("Examples/cypwet_withERRORS.dat") #7 introduced errors
+cypwet_ERRORS<-SCOR.convert("Network data/cypwet_withERRORS.dat") #7 introduced errors
 
 #Test function on 48 foodwebs stored as SCORs.
 #All foodwebs are stored in the same file "DATALL.dat", so the function is wrapped in a FOR-loop that
@@ -57,7 +55,7 @@ return(foodwebs)
 } #END OF FUNCTION
 ################
 
-foodwebs<-SCOR.convert.multiple("Examples/DATALL.dat", nwebs=48)
+foodwebs<-SCOR.convert.multiple("Network data/DATALL.dat", nwebs=48)
 ##Encountered errors in SCOR files:
 #-->no space between nod IDs of intercompartmental exchange eg. (10124 instead of 10 124)
 #-->length of biomass vector unequals number of compartments (biomass stock of 1 compartement forgotten?)
@@ -65,6 +63,6 @@ foodwebs<-SCOR.convert.multiple("Examples/DATALL.dat", nwebs=48)
 #-->flow value exponent is not well defined eg. .3480000+04 instead of .3480000E+04
 
 #Re-test the function on file WITHOUT errors:
-foodwebs.corrected<-SCOR.convert.multiple("Examples/DATALL_corrected.dat", nwebs=48)
+foodwebs.corrected<-SCOR.convert.multiple("Network data/DATALL_corrected.dat", nwebs=48)
 
 

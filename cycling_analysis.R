@@ -1,8 +1,8 @@
+##############################CYCLING ANALYSIS#########################
 #NOTE: steady-state of system is not checked
+#######################################################################
 
-#########################################################################################################
-
-test.function<-function(Z_cs,T_cs,E_cs,R_cs, select="Default", nmax=10000){
+cycling.analysis<-function(Z_cs,T_cs,E_cs,R_cs, select="Default", nmax=10000){
   
   ###Multiple weak arc selection: select weak arc going out from most connected nod OR weak arc that is heavier weighted
   if(select=="weighted"){select<-"weighted"}
@@ -79,8 +79,9 @@ test.function<-function(Z_cs,T_cs,E_cs,R_cs, select="Default", nmax=10000){
   
   for(u in 1:length(nod_DFS)){
     
-    if(length(Weak) >= nmax) break #LIMIT COMPUTING TIME: set a maximal number of cycles to be detected
-    
+    if(length(Weak) >= nmax){  #LIMIT COMPUTING TIME: set a maximal number of cycles to be detected
+      print("Reached limit of nmax removed cycles.")
+      break}
     #1)visit nod following the list order
     mynod<-nod_DFS[min(which(color=="WHITE"))]
     path<-rep(NA, length(which(color=="WHITE")))#start a new DFS search pathway to detect all (remaining) cycles that include mynod
@@ -231,7 +232,7 @@ if(length(Weak)==0 ||
    length(which(round(Weak, digits=9)==0))==length(Weak)){ #DFS SEARCH DID NOT DETECT CYCLES IN NETWORK-->WE ARE FINISHED
     cyc_cs<-list()
     cyc_cs[[1]]<-0 #Nb of cycles=0
-    
+    names(cyc_cs)<-"Number of removed cycles"
 }else{
   
   #STEP4
@@ -680,6 +681,10 @@ if(length(Weak)==0 ||
   aggrcycles<-(T_cs - T_cs_acyclic)[restore.order, restore.order]
   cyc_cs[[8]]<-aggrcycles
 
+names(cyc_cs)<-c("Number of removed cycles","Cycle length distribution",
+                 "Full cycle analysis","Nexus analysis","Cycle distribution",
+                 "Normalized cycle distribution","Residual flows",
+                 "Aggregated cycles")
 }#END OF OUTER ELSE CLAUSE=cycles were detected in network
   
   return(cyc_cs)

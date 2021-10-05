@@ -1,9 +1,6 @@
+setwd("C:/Hannah/Biological Oceanography/HiWi Scotti/ENA PACKAGE/TESTs")
+source("OLD_ENAfuncs.R")
 ##TEST CYCLING ANALYSIS FUNCTION
-#setwd("C:/Hannah/Biological Oceanography/HiWi Scotti/Cycling Analysis")
-
-#Provide function:
-source("CyclingAnalysis_HG.R") #Hannah Gaber edit
-source("ENA.R") #original function (for result comparison)
 
 #function to identify negative values in acyclic interaction matrix:
 negresults <- function(myfoodweb){
@@ -39,13 +36,13 @@ R_cs <- c(2003, 3275, 1814, 203, 3109)
 names(Z_cs) <- names(E_cs) <- names(R_cs) <- names_cs
 colnames(T_cs) <- rownames(T_cs)  <- names_cs
 
-ConeSpring1<-test.function(Z_cs,T_cs,E_cs,R_cs)#default multiple weak arc selection
+ConeSpring1<-cycling.analysis(Z_cs,T_cs,E_cs,R_cs)#default multiple weak arc selection
 negresults(ConeSpring1) #-->no negative results in acyclic matrix
-ConeSpring2<-test.function(Z_cs,T_cs,E_cs,R_cs, select="weighted")#weighted multiple weak arc selection
+ConeSpring2<-cycling.analysis(Z_cs,T_cs,E_cs,R_cs, select="weighted")#weighted multiple weak arc selection
 negresults(ConeSpring2) #-->no negative results in acyclic matrix
 
 ##COMPARE RESULTS
-ConeSpring3<-cycling.analysis(Z_cs,T_cs,E_cs,R_cs)
+ConeSpring3<-cyc.analysis(Z_cs,T_cs,E_cs,R_cs)
 #Compare cycle number:
 ConeSpring1[[1]]
 ConeSpring2[[1]]
@@ -82,32 +79,32 @@ ConeSpring3[[7]]
 
 ##SEARCH FOR CYCLES IN THE ACYCLIC NETWORK
 T_cs<-ConeSpring1[[7]]
-ConeSpring_acyc1<-test.function(Z_cs, T_cs, E_cs, R_cs)
+ConeSpring_acyc1<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)
 ConeSpring_acyc1[[1]]
 T_cs<-ConeSpring2[[7]]
-ConeSpring_acyc2<-test.function(Z_cs, T_cs, E_cs, R_cs)
+ConeSpring_acyc2<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)
 ConeSpring_acyc2[[1]]
 T_cs<-ConeSpring3[[8]]
-ConeSpring_acyc3<-test.function(Z_cs, T_cs, E_cs, R_cs)
+ConeSpring_acyc3<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)
 ConeSpring_acyc3[[1]]
 #   -->OKE
 
 ###########################
 #TEST2: Crystal River Creek
 
-source("Examples/cryscon.R")
+source("Network data/cryscon.R")
 T_cs<-T
 R_cs<-R
 E_cs<-E
 Z_cs<-Z
 
-CrystalRiverCreek1<-test.function(Z_cs, T_cs, E_cs, R_cs)#default multiple weak arc selection
+CrystalRiverCreek1<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)#default multiple weak arc selection
 negresults(CrystalRiverCreek1) #negative results of acyclic matrix range from 10^-16 to 10^-19
-CrystalRiverCreek2<-test.function(Z_cs, T_cs, E_cs, R_cs, select="weighted")#weighted multiple weak arc selection
+CrystalRiverCreek2<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs, select="weighted")#weighted multiple weak arc selection
 negresults(CrystalRiverCreek2) #negative results of acyclic matrix range from 10^-16 to 10^-19
 
 ##COMPARE RESULTS
-CrystalRiverCreek3<-cycling.analysis(Z_cs,T_cs,E_cs,R_cs)
+CrystalRiverCreek3<-cyc.analysis(Z_cs,T_cs,E_cs,R_cs)
 #Compare cycle number:
 CrystalRiverCreek1[[1]]
 CrystalRiverCreek2[[1]]
@@ -149,19 +146,19 @@ CrystalRiverCreek3[[7]]
 
 ##SEARCH FOR CYCLES IN THE ACYCLIC NETWORK
 T_cs<-CrystalRiverCreek1[[7]]
-CrystalRiverCreek_acyc1<-test.function(Z_cs, T_cs, E_cs, R_cs)
+CrystalRiverCreek_acyc1<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)
 CrystalRiverCreek_acyc1[[1]]
 T_cs<-CrystalRiverCreek2[[7]]
-CrystalRiverCreek_acyc2<-test.function(Z_cs, T_cs, E_cs, R_cs)
+CrystalRiverCreek_acyc2<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)
 CrystalRiverCreek_acyc2[[1]]
 T_cs<-CrystalRiverCreek3[[8]]
-CrystalRiverCreek_acyc3<-test.function(Z_cs, T_cs, E_cs, R_cs)
+CrystalRiverCreek_acyc3<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)
 CrystalRiverCreek_acyc3[[1]]
 #   -->OKE
 
 
 #TEST3: Chesa
-chesa <- as.matrix(read.table(file = "Examples/chesa.txt", header = TRUE, sep = "\t"))
+chesa <- as.matrix(read.table(file = "Network data/chesa.txt", header = TRUE, sep = "\t"))
 rownames(chesa) <- colnames(chesa)
 T_cs<-chesa[c(2:37),c(2:37)]
 R_cs<-chesa[c(2:37), 39]
@@ -169,13 +166,13 @@ E_cs<-chesa[c(2:37), 38]
 Z_cs<-chesa[c(2:37), 1]
 names(R_cs)<-names(E_cs)<-names(Z_cs)<-colnames(T_cs)
 
-Chesa1<-test.function(Z_cs, T_cs, E_cs, R_cs)#default multiple weak arc selection
+Chesa1<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)#default multiple weak arc selection
 negresults(Chesa1)#negative results of acyclic matrix range from 10^-13 to 10^-16
-Chesa2<-test.function(Z_cs, T_cs, E_cs, R_cs, select="weighted")#weighted multiple weak arc selection
+Chesa2<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs, select="weighted")#weighted multiple weak arc selection
 negresults(Chesa2)#negative results of acyclic matrix range from 10^-13 to 10^-16
 
 ##COMPARE RESULTS
-Chesa3<-cycling.analysis(Z_cs,T_cs,E_cs,R_cs)
+Chesa3<-cyc.analysis(Z_cs,T_cs,E_cs,R_cs)
 #Compare cycle number:
 Chesa1[[1]]
 Chesa2[[1]]
@@ -228,19 +225,19 @@ Chesa3[[7]]
 
 ##SEARCH FOR CYCLES IN THE ACYCLIC NETWORK
 T_cs<-Chesa1[[7]]
-Chesa_acyc1<-test.function(Z_cs, T_cs, E_cs, R_cs)
+Chesa_acyc1<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)
 Chesa_acyc1[[1]]
 T_cs<-Chesa2[[7]]
-Chesa_acyc2<-test.function(Z_cs, T_cs, E_cs, R_cs)
+Chesa_acyc2<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)
 Chesa_acyc2[[1]]
 T_cs<-Chesa3[[8]]
-Chesa_acyc3<-test.function(Z_cs, T_cs, E_cs, R_cs)
+Chesa_acyc3<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)
 Chesa_acyc3[[1]]
 #   -->OKE
 
 
 #TEST4: St Marks
-stmarks <- as.matrix(read.table(file = "Examples/st_marks.txt", header = TRUE, sep = "\t"))
+stmarks <- as.matrix(read.table(file = "Network data/st_marks.txt", header = TRUE, sep = "\t"))
 rownames(stmarks) <- colnames(stmarks)
 T_cs<-stmarks[c(2:52),c(2:52)]
 R_cs<-stmarks[c(2:52), 54]
@@ -248,13 +245,13 @@ E_cs<-stmarks[c(2:52), 53]
 Z_cs<-stmarks[c(2:52), 1]
 names(R_cs)<-names(E_cs)<-names(Z_cs)<-colnames(T_cs)
 
-Stmarks1<-test.function(Z_cs, T_cs, E_cs, R_cs)#default multiple weak arc selection
+Stmarks1<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs)#default multiple weak arc selection
 negresults(Stmarks1)#negative results of acyclic matrix range from 10^-16 to 10^-19
-Stmarks2<-test.function(Z_cs, T_cs, E_cs, R_cs, select="weighted")#weighted multiple weak arc selection
+Stmarks2<-cycling.analysis(Z_cs, T_cs, E_cs, R_cs, select="weighted")#weighted multiple weak arc selection
 negresults(Stmarks2)#negative results of acyclic matrix range from 10^-16 to 10^-19
 
 ##COMPARE RESULTS
-Stmarks3<-cycling.analysis(Z_cs,T_cs,E_cs,R_cs)
+Stmarks3<-cyc.analysis(Z_cs,T_cs,E_cs,R_cs)
 #Compare cycle number:
 Stmarks1[[1]]
 Stmarks2[[1]]
@@ -312,17 +309,16 @@ Stmarks_acyc3[[1]]
 ##################
 #Test function on a very large foodweb
 #-->number of detected cycles is limited to nmax=10 000 (default)
-source("convertSCOR.inclErr.R")
-Cypwet<-SCOR.convert("Examples/cypwet.dat")
+Cypwet<-SCOR.convert("Network data/cypwet.dat")
 Z_cs<-Cypwet[[3]]
 E_cs<-Cypwet[[4]]
 R_cs<-Cypwet[[5]]
 T_cs<-Cypwet[[6]]
 
-Cypwet_cs<-test.function(Z_cs,T_cs,E_cs,R_cs)#takes ~4-5 min 
+Cypwet_cs<-cycling.analysis(Z_cs,T_cs,E_cs,R_cs)#takes ~4-5 min 
 Cypwet_cs[[1]]
 negresults(Cypwet_cs)#44 items in the range of10^-19 to 10^-22
 
-Cypwet_cs.w<-test.function(Z_cs,T_cs,E_cs,R_cs, select="weighted")#somewhat longer 
+Cypwet_cs.w<-cycling.analysis(Z_cs,T_cs,E_cs,R_cs, select="weighted")#somewhat longer 
 Cypwet_cs.w[[1]]
 negresults(Cypwet_cs.w)#44 items in the range of10^-19 to 10^-22

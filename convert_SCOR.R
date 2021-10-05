@@ -1,4 +1,4 @@
-setwd("C:/Hannah/Biological Oceanography/HiWi Scotti/SCOR format")
+#setwd("C:/Hannah/Biological Oceanography/HiWi Scotti/SCOR format")
 
 ###CONVERSION OF SCOR-FORMAT NETWORK INTO:
 #####-->information of living/total number of compartments
@@ -9,6 +9,7 @@ setwd("C:/Hannah/Biological Oceanography/HiWi Scotti/SCOR format")
 #####-->matrix of intercompartamental exchanges (T_cs) 
 
 #NOTE: some foodwebs have 3 elements as Info of non-living/living compartments
+# (!!!)FUNCTION DOES NOT WORK ON eg. file=SCOR format/cypwet.dat"!!!!!
 
 SCOR.convert<-function(file, header=1){
 

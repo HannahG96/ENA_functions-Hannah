@@ -1,14 +1,10 @@
+setwd("C:/Hannah/Biological Oceanography/HiWi Scotti/ENA PACKAGE/TESTs")
+source("OLD_ENAfuncs.R")
 ###TEST NETWORK BALANCING FUNCTIONS###
-
-setwd("C:/Hannah/Biological Oceanography/HiWi Scotti")
-source("Network balancing/network_bal.R")
-source("Network balancing/ENA_network_bal.R")#balancing functions to compare and check results
 
 ##TEST 1: Cypwet network=unbalanced network
 
-#Import matrix:
-source("SCOR format/convertSCOR.inclErr.R")
-Cypwet<-SCOR.convert("Network balancing/cypwet.dat")
+Cypwet<-SCOR.convert("Network data/cypwet.dat") 
 Z_cs<-Cypwet[[4]]#Import
 E_cs<-Cypwet[[5]]#Export
 R_cs<-Cypwet[[6]]#Respiration
@@ -68,7 +64,7 @@ a<-network.balance(Z_cs, E_cs, R_cs, T_cs, method="avg2")
 ##TEST3: Test function on 48 networks (SCOR format) and compare results
 
 #Import networks:
-source("SCOR format/testSCOR.R")
+source("test.convert_SCOR.R")
 
 #Create a FOR loop to test network balancing functions on each network and to
 #compare results with the ENA function:
