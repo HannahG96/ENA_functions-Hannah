@@ -24,6 +24,8 @@ if(migr==TRUE){
 CINP<-TROPHIC[[13]]}
 #Returns to Detrital pool
 backDET<-as.vector(TROPHIC[[6]])
+#Input to detrital pool
+inpDET<-TROPHIC[[8]]
 #Lindeman Spine
 LindS<-TROPHIC[[10]]
 #Stock sizes per discrete trophic level
@@ -71,18 +73,21 @@ for(i in 1:nTL){
   LindS.outcoming<-z
   z<-z+1
   LindS.incoming<-i
-  LindS.value<-LindS[i]
+  if(i==1){LindS.value<-LindS[i]+inpDET #add input to detrital pool
+  }else{LindS.value<-LindS[i]}
   linds<-rbind(linds,c(LindS.outcoming,LindS.incoming,LindS.value))
   backDET.outcoming<-i
-  backDET.passby<-"Dummy"
+  backDET.passby<-paste("Dummy",i,sep="")
   backDET.value<-backDET[i]
   backdet<-rbind(backdet,c(backDET.outcoming,backDET.passby,backDET.value))}
-backdet<-rbind(backdet,c(backDET.passby,"Edge1",NA))
-colnames(cexp)<-colnames(cresp)<-colnames(cinp)<-colnames(linds)<-colnames(backdet)<-
+backbackdet<-data.frame(FROM=backdet[,2], TO=rep("eDummy",nTL), WEIGHT=NA)
+colnames(backdet)<-c("FROM","TO","WEIGHT")
+backdet<-rbind(backdet,backbackdet,c("eDummy","Edge1",NA))
+colnames(cexp)<-colnames(cresp)<-colnames(cinp)<-colnames(linds)<-
              c("FROM","TO","WEIGHT")
 edge_info<-rbind(linds,cexp,cresp,backdet)
-whichFROM<-c(c(0:(nTL-1)),c(1:nTL),c(1:nTL),c(1:nTL),"Dummy")
-whichTO<-c(c(1:nTL),rep("OUT",nTL),rep("LOSS",nTL),rep("Dummy",nTL),"Edge1")
+whichFROM<-c(c(0:(nTL-1)),c(1:nTL),c(1:nTL),c(1:nTL),rep("Dummy",nTL),"eDummy")
+whichTO<-c(c(1:nTL),rep("OUT",nTL),rep("LOSS",nTL),rep("Dummy",nTL),rep("eDummy",nTL),"Edge1")
 if(migr==TRUE){
   edge_info<-rbind(edge_info,cinp)
   whichFROM<-c(whichFROM,rep("IN",nTL))
@@ -124,8 +129,8 @@ COL[c(2:(nTL+1))]<-"black"
 #Coordinates
 #Y-COORD:
 if(migr==TRUE){
-  COORDY<-c(rep(6,(nTL+1)),3.5,rep(7.5,(nTL*3)),6)
-}else{COORDY<-c(rep(6,(nTL+1)),3.5,rep(7.5,(nTL*2)),6)}
+  COORDY<-c(rep(6,(nTL+1)),rep(5,(nTL+1)),rep(7.5,(nTL*3)),6)
+}else{COORDY<-c(rep(6,(nTL+1)),rep(5,(nTL+1)),rep(7.5,(nTL*2)),6)}
 #X-COORD:
 X.LindS<-seq(from=0,to=12,length.out=(nTL+1))
 if(migr==TRUE){
@@ -135,14 +140,17 @@ if(migr==TRUE){
 }else{X.ENV<-X.LindS[-1]}
 X.RESP<-X.LindS[-1]+(0.5*X.LindS[2])
 X.Edge1<-X.LindS[1]+(0.6*X.LindS[2])
-X.Dummy<-X.LindS[1]+(0.5*X.LindS[2])
+X.Dummy<-c(X.LindS[c(2:(nTL+1))],X.Edge1)
 COORDX<-c(X.LindS,X.Dummy,X.ENV,X.RESP,X.Edge1)
 #Node size
 if(nTL<12){
 WIDTH<-rep(0.75,length(NOD_ID))
 }else{WIDTH<-rep(0.6,length(NOD_ID))}
 HEIGHT<-rep(0.75,length(NOD_ID))
-WIDTH[which(NOD_ID=="Dummy")]<-HEIGHT[which(NOD_ID=="Dummy")]<-0.1
+for(i in 1:nTL){
+  mydummy<-paste("Dummy",i,sep="")
+WIDTH[which(NOD_ID==mydummy)]<-HEIGHT[which(NOD_ID==mydummy)]<-0.1}
+WIDTH[which(NOD_ID=="eDummy")]<-HEIGHT[which(NOD_ID=="eDummy")]<-0.1
 WIDTH[which(NOD_ID=="Edge1")]<-HEIGHT[which(NOD_ID=="Edge1")]<-0.1
 #Node style
 STYLE<-rep("invis",length(NOD_ID))
@@ -173,7 +181,8 @@ eSTYLE[which(whichTO=="LOSS")]<-"dashed"
 #Headport/Tailport
 #-->"n","ne","e","se","s","sw","w","nw","c","_"
 HEADPORT<-rep(NA,nrow(edge_info))
-HEADPORT[which(whichTO=="Dummy")]<-"w" #Return to detritus
+HEADPORT[which(whichTO=="Dummy")]<-"e" #Return to detritus
+HEADPORT[which(whichTO=="eDummy")]<-"w" #Return to detritus
 HEADPORT[which(whichTO=="Edge1")]<-"w" #Return to detritus
 HEADPORT[which(whichTO=="LOSS")]<-"s"  #Respiration
 HEADPORT[which(whichFROM=="IN")]<-"nw" #Import
@@ -182,6 +191,7 @@ HEADPORT[which(is.na(HEADPORT)==TRUE)]<-"w" #Lindeman Spine
 
 TAILPORT<-rep(NA,nrow(edge_info))
 TAILPORT[which(whichTO=="Dummy")]<-"se" #Return to detritus
+TAILPORT[which(whichTO=="eDummy")]<-"e" #Return to detritus
 TAILPORT[which(whichTO=="Edge1")]<-"w" #Return to detritus
 TAILPORT[which(whichTO=="LOSS")]<-"ne"  #Respiration
 TAILPORT[which(whichFROM=="IN")]<-"s" #Import
@@ -190,7 +200,8 @@ TAILPORT[which(is.na(TAILPORT)==TRUE)]<-"e" #Lindeman Spine
 
 #Arrowhead
 ARROWHEAD<-rep("normal",nrow(edge_info))
-ARROWHEAD[which(whichTO=="Dummy")]<-"none" #dot;odot
+ARROWHEAD[which(whichTO=="Dummy")]<-"half-open" #dot;odot
+ARROWHEAD[which(whichTO=="eDummy")]<-"normal" 
 ARROWHEAD[which(whichTO=="Edge1")]<-"none"
 
 #Numeric Nod IDs
@@ -217,9 +228,9 @@ edge_df <- create_edge_df(from = edge_info[,"num.FROM"], to = edge_info[,"num.TO
 
 plotI<-create_graph(nodes_df = nod_df, edges_df = edge_df)%>%
   add_global_graph_attrs(attr="splines",
-                         value="curved",
+                         value="spline",
                          attr_type="graph")
-
+#render_graph(plotI)
 
 ###########TROPHIC TRANSFORMATION MATRIX#################################
 #-->stacked barplot of feeding partitioning among discrete trophic levels
