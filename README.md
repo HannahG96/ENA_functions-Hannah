@@ -3,7 +3,7 @@ This is a work in progress associated to the development of an R package in prep
 
 (1) functions to analyse ecological networks on the basis of cycling analysis, canonical trophic aggregation and information/attribute indices. 
 
-(2) functions to visualize analysis outputs (Lindeman Spine, Trophic Transfer Efficiency Pyramid, Barplots of indices) and networks. 
+(2) functions to visualize analysis outputs (Lindeman Spine, Trophic Transfer Efficiency Pyramid, Barplots of Indices) and networks. 
 
 (3) functions to randomize network flows and test for statistical significance of analysis outputs.
 
