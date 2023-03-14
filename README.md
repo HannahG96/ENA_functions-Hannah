@@ -7,6 +7,10 @@ This is a work in progress associated to the development of an R package in prep
 
 (3) functions to randomize network flows and test for statistical significance of analysis outputs.
 
+(4) functions to mass-balance ecological networks.
+
+(5) functions to convert SCOR files into Transfer matrix and vectors of Imports, Exports, Respiration.
+
 ### Authors:
 Hannah Gaber
 Marco Scotti
